@@ -6,6 +6,9 @@
   },
   "name": "meflu",
   "version": "1.0.0",
+  "engines": {
+    "node": "16.6.2"
+  },
   "main": "main.js",
   "devDependencies": {},
   "scripts": {
