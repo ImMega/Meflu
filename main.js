@@ -9,12 +9,14 @@ const client = new Client({
 
 client.prefix = "m!";
 
+const rpc = require("./client/activities");
+
 client
 .on("ready", () => {
     console.log(`${client.user.username} is now online!`);
 
     require("./utils/filesLoad").load(client);
-    require("./client/activities")
+    rpc(client);
 })
 .on("messageCreate", message => {
     require("./events/messageCreate").run(message, client);
