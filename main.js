@@ -14,6 +14,7 @@ client
     console.log(`${client.user.username} is now online!`);
 
     require("./utils/filesLoad").load(client);
+    require("./client/activities")
 })
 .on("messageCreate", message => {
     require("./events/messageCreate").run(message, client);
