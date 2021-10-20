@@ -28,7 +28,7 @@ module.exports = {
             for (const file of files){
                 const cmd = require("." + folder.join("") + file);
                 
-                client.commands.set(cmd.name, cmd);
+                if(cmd.name && cmd.execute) client.commands.set(cmd.name, cmd);
             }
 
             folderSearch(folder);
