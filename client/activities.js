@@ -1,4 +1,6 @@
-module.exports = async (client) => {
+const { client } = require("../main")
+
+module.exports = async () => {
     const activities = [
         {
             type: "LISTENING",
@@ -24,6 +26,12 @@ module.exports = async (client) => {
             ]
         }
     ]
+
+    client.guilds.cache.get("864529121874018374").members.fetch().then((members) => {
+        members.forEach((member) => {
+            if(member.user.id === "888876737914601472") activities.find(m => m.type === "PLAYING").name.push("with " + member.user.username)
+        })
+    })
 
     setInterval(() => {
         const random = Math.floor(Math.random() * (activities.length + 1));
