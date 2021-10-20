@@ -10,7 +10,7 @@
   "name": "meflu",
   "version": "1.0.0",
   "engines": {
-    "node": "16.6.2"
+    "node": "16.x"
   },
   "main": "main.js",
   "scripts": {
