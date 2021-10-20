@@ -2,7 +2,7 @@ const profileModel = require("../Models/profileSchema");
 
 module.exports = {
     async run(message, client){
-        if(!message.content.startsWith(client.prefix) || message.author.bot) return;
+        if(!message.content.startsWith(client.prefix) || message.author.bot) return require("../actions/msgInteractions").execute(message);
 
         let profileData;
         try {
