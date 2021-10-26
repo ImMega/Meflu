@@ -4,7 +4,7 @@ module.exports = {
         const segs = message.guild.emojis.cache.find(e => e.name === "segs")
         const interactions = [
             {
-                name: "727",
+                name: ["727"],
                 responses: [
                     "when you see it",
                     "WYSI",
@@ -15,7 +15,7 @@ module.exports = {
                 ]
             },
             {
-                name: "segs",
+                name: ["segs"],
                 responses: [
                     "segs?!?!!",
                     `${segs}`,
@@ -25,7 +25,7 @@ module.exports = {
             }
         ]
 
-        const found = interactions.find(i => i.name === message.content.toLowerCase());
+        const found = interactions.find(i => i.name.includes(message.content.toLowerCase()));
         if(!found) return;
 
         const random = Math.floor(Math.random() * found.responses.length);

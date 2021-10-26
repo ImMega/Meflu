@@ -5,46 +5,37 @@ module.exports = {
     load(client){
         client.commands = new Collection();
 
-        function folderSearch(folder){
-            const files = fs.readdirSync(folder.join(""));
-            
-            for (const file of files){
-                if(fs.existsSync(folder.join("") + file)){
-                    const stats = fs.lstatSync(folder.join("") + file);
-
-                    if(stats.isDirectory()){
-                        folder.push(file + "/");
-                        fileLoad(folder);
-                    }
-                }
-            }
-        }
-
-        function fileLoad(folder){
-            // console.log(folder[folder.length - 1].replace(/\./g, "").replace(/\//g, ""))
-
-            const files = fs.readdirSync(folder.join("")).filter(file => file.endsWith(".js"));
-
-            for (const file of files){
-                const cmd = require("." + folder.join("") + file);
-                
-                if(cmd.name && cmd.execute) client.commands.set(cmd.name, cmd);
-            }
-
-            folderSearch(folder);
-        }
-
-        let folder = ["./commands/"];
+        const folder = ["./commands/"];
         
         // client.categories = [];
         
-        fileLoad(folder);
+        this.fileLoad(client, folder);
+    },
 
-        // const cmdFiles = fs.readdirSync("./commands/").filter(file => file.endsWith(".js"));
-        // for (const file of cmdFiles){
-        //     const cmd = require(`../commands/${file}`);
+    fileLoad(client, folder){
+        const files = fs.readdirSync(folder.join("")).filter(file => file.endsWith(".js"));
 
-        //     client.commands.set(cmd.name, cmd);
-        // }
+        for (const file of files){
+            const cmd = require("." + folder.join("") + file);
+            
+            if(cmd.name && cmd.execute) client.commands.set(cmd.name, cmd);
+        }
+
+        this.folderSearch(client, folder);
+    },
+
+    folderSearch(client, folder){
+        const files = fs.readdirSync(folder.join(""));
+            
+        for (const file of files){
+            if(fs.existsSync(folder.join("") + file)){
+                const stats = fs.lstatSync(folder.join("") + file);
+
+                if(stats.isDirectory()){
+                    folder.push(file + "/");
+                    this.fileLoad(client, folder);
+                }
+            }
+        }
     }
 }

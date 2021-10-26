@@ -6,14 +6,17 @@ module.exports = async () => {
             type: "LISTENING",
             name: [
                 `daddy`,
-                `bangers`
+                `bangers`,
+                `silence`
             ]
         },
         {
             type: "PLAYING",
             name: [
                 `osu!droid`,
-                `with oni-chan`
+                `with oni-chan`,
+                `Arcaea`,
+                `in basement`
             ]
         },
         {
