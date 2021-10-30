@@ -16,7 +16,7 @@ module.exports = {
             .setThumbnail(client.user.displayAvatarURL({ dynamic: true }))
             .setFooter(`${client.user.username} Command List`, client.user.displayAvatarURL({ dynamic: true }))
 
-            await client.categories.map(c => embed.addField(c.name, c.cmds.map(v => `\`${v}\``).join(` • `)));
+            const list = await client.categories.map(c => embed.addField(c.name, c.cmds.map(v => `\`${v}\``).join(` • `)));
 
             message.channel.send({ embeds: [embed] }) 
         } else {

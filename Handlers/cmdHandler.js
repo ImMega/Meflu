@@ -7,6 +7,8 @@ module.exports = (client) => {
     const filesLoad = (folder, folderName, t, loadedFolders) => {
         const cmdFiles = fs.readdirSync(folder.join("")).filter(file => file.endsWith(".js"))
 
+        if(cmdFiles.length === 0) client.categories.pop();
+
         for(const file of cmdFiles){
             const cmd = require("." + folder.join("") + file);
 
