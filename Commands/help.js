@@ -8,7 +8,7 @@ module.exports = {
     usage: "help (command)",
     permissions: [],
     async execute(message, args){
-        if(!args){
+        if(!args[0]){
             const embed = new MessageEmbed()
             .setColor(message.guild.members.cache.get(client.user.id).displayHexColor)
             .setTitle(`${client.user.username} Command List`)
