@@ -5,6 +5,11 @@ const validUrl = require("valid-url");
 
 module.exports = {
     name: "skin",
+    aliases: [],
+    description: "Shows or sets your main skin",
+    usage: "skin (mention user)\n"
+        + "skin set <skin link> <skin name> + screenshot as an attachment (optional)",
+    permissions: [],
     async execute(message, args, client){
         let profile = await profileModel.findOne({userID: message.author.id});
 

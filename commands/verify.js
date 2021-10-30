@@ -2,7 +2,10 @@ const { MessageEmbed } = require("discord.js");
 
 module.exports = {
     name: "verify",
-    description: "Verifies new member",
+    aliases: [],
+    description: "Verifies a new member",
+    usage: "verify <mention user>",
+    permissions: ["Moderator"],
     async execute(message, args, client){
         if(!message.mentions.members.first()) return message.reply({ content: "You need to mention a user you want to verify!", allowedMentions: { repliedUser: false } });
 
