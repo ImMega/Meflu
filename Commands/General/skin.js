@@ -1,4 +1,4 @@
-const profileModel = require("../Models/profileSchema");
+const profileModel = require("../../Models/profileSchema");
 const { MessageEmbed } = require("discord.js");
 const { default: isImageURL } = require("image-url-validator");
 const validUrl = require("valid-url");
