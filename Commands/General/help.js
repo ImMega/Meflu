@@ -20,7 +20,7 @@ module.exports = {
 
             message.channel.send({ embeds: [embed] }) 
         } else {
-            const cmd = client.commands.get(args[0]);
+            const cmd = client.commands.get(args[0]) || client.commands.get(client.cmdA.get(args[0]));
 
             if(!cmd) message.reply({ content: "That command doesn't exist!", allowedMentions: { repliedUser: false } });
 

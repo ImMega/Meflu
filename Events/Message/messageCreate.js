@@ -9,9 +9,9 @@ module.exports = async (message) => {
     const args = message.content.slice(client.prefix.length).split(/ +/);
     const command = args.shift().toLowerCase();
 
-    const cmd = client.commands.get(command);
+    const cmd = client.commands.get(command) || client.commands.get(client.cmdA.get(command));
 
-    if(command === "msg") return cmd.execute(message, args);
+    if(cmd.name === "msg") return cmd.execute(message, args);
 
     let profileData;
     try {

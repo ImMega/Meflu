@@ -3,6 +3,7 @@ const { Collection } = require("discord.js");
 
 module.exports = (client) => {
     client.commands = new Collection();
+    client.cmdA = new Collection();
 
     const filesLoad = (folder, folderName, t, loadedFolders) => {
         const cmdFiles = fs.readdirSync(folder.join("")).filter(file => file.endsWith(".js"))
@@ -15,6 +16,10 @@ module.exports = (client) => {
             client.commands.set(cmd.name, cmd);
 
             client.categories.find(c => c.name === folderName).cmds.push(cmd.name);
+
+            cmd.aliases.forEach(alias => {
+                client.cmdA.set(alias, cmd.name);
+            })
 
             console.log(file + " loaded");
         }
