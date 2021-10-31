@@ -11,8 +11,8 @@ module.exports = {
         if(!args[0]){
             const embed = new MessageEmbed()
             .setColor(message.guild.members.cache.get(client.user.id).displayHexColor)
-            .setTitle(`${client.user.username} Command List`)
-            .setDescription(`Here's my command list!`)
+            .setTitle(`Yo, here's the command list`)
+            .setDescription(`DM or ping <@470277450551656459> if anything goes wrong`)
             .setThumbnail(client.user.displayAvatarURL({ dynamic: true }))
             .setFooter(`${client.user.username} Command List`, client.user.displayAvatarURL({ dynamic: true }))
 
