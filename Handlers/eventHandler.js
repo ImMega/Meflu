@@ -11,5 +11,5 @@ module.exports = (client) => {
         }
     }
 
-    ["Client", "Message", "User"].forEach(e => loadir(e));
+    ["Client", "Guild", "Message", "User"].forEach(e => loadir(e));
 }
