@@ -1,7 +1,7 @@
 const { client } = require("../../main");
 
-module.exports = () => {
-    console.log(`${client.user.username} is now online!`)
+module.exports = async () => {
+    console.log(`${client.user.username} is now online!`);
 
-    require("../../client/activities")();
+    require("../../activities/statuses")();
 }
