@@ -10,11 +10,11 @@ module.exports = async (interaction) => {
 
     let profileData;
     try {
-        profileData = await profileModel.findOne({userID: message.author.id});
+        profileData = await profileModel.findOne({userID: interaction.user.id});
 
         if(!profileData){
             let profile = await profileModel.create({
-                userID: message.author.id,
+                userID: interaction.user.id,
                 mainSkin: {"name" : "", "link" : ""},
                 skins: []
             });
