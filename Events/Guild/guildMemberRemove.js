@@ -13,8 +13,8 @@ module.exports = (member) => {
             embeds: [
                 new MessageEmbed()
                 .setColor(member.guild.members.cache.get(client.user.id).displayHexColor)
-                .setTitle("Someone Just Left")
-                .setDescription(`**${member.user.username}** has left the server, also, they were not verified`)
+                .setTitle("Someone Unverified Just Left")
+                .setDescription(`**${member.user.username}** has left the server and they were not verified`)
                 .setThumbnail(member.user.displayAvatarURL({ dynamic: true }))
                 .setTimestamp()
             ]
