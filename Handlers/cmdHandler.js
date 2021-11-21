@@ -17,10 +17,6 @@ module.exports = (client) => {
 
             client.categories.find(c => c.name === folderName).cmds.push(cmd.name);
 
-            cmd.aliases.forEach(alias => {
-                client.cmdA.set(alias, cmd.name);
-            })
-
             console.log(file + " loaded");
         }
 
@@ -53,7 +49,7 @@ module.exports = (client) => {
         }
     }
 
-    const cmdsFolder = ["./Commands/"];
+    const cmdsFolder = ["./commands/"];
     const loadedFolders = [];
 
     client.categories = [
