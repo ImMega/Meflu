@@ -1,44 +1,48 @@
+const { SlashCommandBuilder } = require("@discordjs/builders");
 const { MessageEmbed } = require("discord.js");
 
 module.exports = {
     name: "verify",
-    aliases: [],
-    description: "Verifies a new member",
-    usage: "verify <mention user>",
-    permissions: ["Moderator"],
-    async execute(message, args, client){
-        if(!message.mentions.members.first()) return message.reply({ content: "You need to mention a user you want to verify!", allowedMentions: { repliedUser: false } });
+    data: new SlashCommandBuilder()
+        .setName("verify")
+        .setDescription("MODERATORS Verifies the member")
+        .addUserOption(option => option.setName("member").setDescription("An unverified member").setRequired(true))
+        .setDefaultPermission(false),
+    async execute(interaction){
+        const { client } = require("../../main");
 
-        const memberID = args[0].replace("<@!", "").replace("<@", "").replace(">", "");
-        const target = message.guild.members.cache.get(memberID);
+        await interaction.deferReply();
 
-        if(!target) return message.reply({ content: "Couldn't find that member!", allowedMentions: { repliedUser: false } });
+        const target = interaction.options.getUser("member");
 
-        if(target.user.bot) return message.reply({ content: "You can't verify bots!", allowedMentions: { repliedUser: false } });
+        const member = interaction.guild.members.cache.get(target.id)
 
-        let kocho = message.member.roles.cache.some(role => role.id === `864532450151628860`);
-        let kyoto = message.member.roles.cache.some(role => role.id === `864533085458268210`);
-        
-        if(!kocho && !kyoto) return message.reply({ content: "You can't do that!", allowedMentions: { repliedUser: false } });
+        if(!member) return interaction.editReply("Couldn't find that member!");
 
-        if(message.author.id === memberID) return message.reply({ content: "You can't verify yourself!", allowedMentions: { repliedUser: false } });
+        if(member.user.bot) return interaction.editReply("You can't verify bots!");
 
-        let unverifiedHas = target.roles.cache.some(role => role.id === `864709553672683540`);
+        if(interaction.user.id === member.id) return interaction.editReply("You can't verify yourself!");
 
-        if(!unverifiedHas) return message.reply({ content: "That member is already verified!", allowedMentions: { repliedUser: false } });
+        const unverified = member.roles.cache.some(role => role.id === "864709553672683540");
+        const verified = member.roles.cache.some(role => role.id === "864536328937668638");
 
-        const unverifiedRole = message.guild.roles.cache.find(role => role.id === "864709553672683540");
-        const gakuseiRole = message.guild.roles.cache.find(role => role.id === "864536328937668638");
+        if(!unverified && verified) return interaction.editReply("That member is already verified!");
 
-        await target.roles.remove(unverifiedRole)
-        await target.roles.add(gakuseiRole);
+        const unverifiedRole = interaction.guild.roles.cache.find(role => role.id === "864709553672683540");
+        const gakuseiRole = interaction.guild.roles.cache.find(role => role.id === "864536328937668638");
 
-        const clientRoleClr = message.guild.members.cache.get(client.user.id).roles.highest.hexColor;
+        await member.roles.remove(unverifiedRole);
+        await member.roles.add(gakuseiRole);
 
-        const embed = new MessageEmbed()
-            .setColor(clientRoleClr)
-            .setDescription(`${target} has been verified!`)
-            .setFooter(message.author.tag, message.author.displayAvatarURL({ dynamic: true }))
-        message.channel.send({ embeds: [embed] })
+        const clientRoleClr = interaction.guild.members.cache.get(client.user.id).displayHexColor;
+
+        interaction.editReply({
+            embeds: [
+                new MessageEmbed()
+                    .setColor(clientRoleClr)
+                    .setDescription(`${member} has been verified!`)
+                    .setFooter(interaction.user.tag, interaction.user.displayAvatarURL({ dynamic: true }))
+            ]
+        });
     }
 }

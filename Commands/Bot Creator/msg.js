@@ -1,13 +1,25 @@
+const { SlashCommandBuilder } = require("@discordjs/builders");
+
 module.exports = {
     name: "msg",
-    aliases: ["say"],
-    description: "Sends the message as a bot",
-    usage: "msg <message>",
-    permissions: ["Bot Creator"],
-    execute(message, args){
-        if(message.author.id !== "470277450551656459") return;
+    data: new SlashCommandBuilder()
+        .setName("msg")
+        .setDescription("BOT CREATOR Sends the message as a bot")
+        .addStringOption(option => option.setName("message").setDescription("Message to send").setRequired(true))
+        .addChannelOption(option => option.setName("channel").setDescription("Channel to send message in"))
+        .setDefaultPermission(false),
+    async execute(interaction){
+        if(interaction.user.id !== "470277450551656459") return;
+        
+        const channel = interaction.options.getChannel("channel");
+        const message = interaction.options.getString("message");
 
-        message.delete();
-        message.channel.send(args.join(" "));
+        if(channel){
+            channel.send(message);
+            interaction.reply({ content: "Message should be sent", ephemeral: true });
+        } else {
+            await interaction.channel.send(message);
+            interaction.reply({ content: "Message should be sent", ephemeral: true });
+        }
     }
 }

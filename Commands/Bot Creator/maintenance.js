@@ -1,20 +1,22 @@
-const { client } = require("../../main");
+const { SlashCommandBuilder } = require("@discordjs/builders");
 
 module.exports = {
     name: "maintenance",
-    aliases: [],
-    description: "Toggles the maintenance mode",
-    usage: "maintenance",
-    permissions: ["Bot Creator"],
-    execute(message, args){
-        if(message.author.id !== "470277450551656459") return;
+    data: new SlashCommandBuilder()
+        .setName("maintenance")
+        .setDescription("BOT CREATOR Toggles the maintenance mode")
+        .setDefaultPermission(false),
+    async execute(interaction){
+        const { client } = require("../../main");
+        
+        if(interaction.user.id !== "470277450551656459") return;
 
         if(client.maintenance === 0){
             client.maintenance = 1;
-            message.reply("Enabled the maintenance mode");
+            interaction.reply({ content: "Maintenance mode turned on", ephemeral: true });
         } else if(client.maintenance === 1){
             client.maintenance = 0;
-            message.reply("Disabled the maintenance mode");
+            interaction.reply({ content: "Maintenance mode turned off", ephemeral: true });
         }
     }
 }
