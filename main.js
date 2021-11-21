@@ -11,7 +11,7 @@ module.exports = { client }
 client.prefix = "m!";
 client.maintenance = 0;
 
-fs.readdirSync("./Handlers").filter(file => file.endsWith(".js"))
+fs.readdirSync("./handlers").filter(file => file.endsWith(".js"))
 .forEach(handler => require(`./handlers/${handler}`)(client));
 
 mongoose.connect(process.env.MONGO_SRV)
