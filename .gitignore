@@ -74,3 +74,6 @@ typings/
 
 # FuseBox cache
 .fusebox/
+
+# Slash Commands Deployment Scripts
+command_scripts
