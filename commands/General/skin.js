@@ -62,33 +62,18 @@ module.exports = {
         if(!profile.mainSkin.screenshots.length > 1){
             interaction.editReply({ embeds: [embed] });
         } else {
-            const row = new MessageActionRow()
-                .addComponents(
-                    new MessageButton()
-                        .setCustomId("prev")
-                        .setEmoji("⏮️")
-                        .setStyle("PRIMARY")
-                        .setDisabled(true),
-                    new MessageButton()
-                        .setCustomId("next")
-                        .setEmoji("⏭️")
-                        .setStyle("PRIMARY")
-                        .setDisabled(profile.mainSkin.screenshots.length === 1 ? true : false)
-                )
-            
             const getButtons = (pageNo) => {
                 return new MessageActionRow().addComponents(
                     new MessageButton()
                         .setCustomId("prev")
                         .setEmoji("⏮️")
                         .setStyle("PRIMARY")
-                        .setDisabled(pageNo < 0 || pageNo === 0),
+                        .setDisabled(pageNo === false || (pageNo < 0 || pageNo === 0)),
                     new MessageButton()
                         .setCustomId("next")
                         .setEmoji("⏭️")
                         .setStyle("PRIMARY")
-                        .setDisabled(!(pageNo < profile.mainSkin.screenshots.length - 1))
-                )
+                        .setDisabled(pageNo === false || !(pageNo < profile.mainSkin.screenshots.length - 1)))
             }
 
             const intrMsg = await interaction.editReply({ embeds: [embed], components: [getButtons(0)] })
@@ -111,6 +96,10 @@ module.exports = {
                 embed.setImage(profile.mainSkin.screenshots[collector.pages])
 
                 i.update({ embeds: [embed], components: [getButtons(collector.pages)] })
+            });
+
+            collector.on("end", i => {
+                interaction.editReply({ embeds: [embed], components: [getButtons(false)] })
             })
         }
     },
@@ -123,31 +112,67 @@ module.exports = {
 
         if(!validUrl(skinLink)) return interaction.editReply("The skin link is not valid!");
 
-        const images = await interaction.editReply("If you want to add any screenshots, please send them within 30 seconds or respond with `nah` if you don't want to")
-            .then(() => {
-                return interaction.channel.awaitMessages({ filter: r => { return r.author.id === interaction.user.id && (r.content.toLowerCase().startsWith("nah") || r.attachments.size > 0 && r.attachments.size < 11) }, max: 1, time: 30000, errors: ["time"] })
-                    .then(collected => {
-                        if(collected.first().content.toLowerCase().startsWith("nah")) return [false];
+        const row = new MessageActionRow().addComponents(
+                new MessageButton()
+                    .setCustomId("confirm")
+                    .setLabel("Yes")
+                    .setStyle("SUCCESS"),
+                new MessageButton()
+                    .setCustomId("cancel")
+                    .setLabel("Nah")
+                    .setStyle("DANGER"))
 
-                        collected.first().delete();
+        const intrMsg = await interaction.editReply({ content: "Do you want to add some screenshots?", components: [row] });
 
-                        return collected.first().attachments;
-                    })
-                    .catch(collected => {
-                        return [false];
-                    })
-            });
-        
-        const screenshots = await images.map(a => {
-            if(isValidImage(a.url)) return a.url;
+        const collector = await intrMsg.createMessageComponentCollector({ time: 60000, componentType: "BUTTON" })
+
+        collector.on("collect", async i => {
+            if(i.user.id !== interaction.user.id) return;
+
+            if(i.customId === "confirm"){
+                const images = await i.update({ content: "Please send the screenshots within 2 minutes or respond with `nah` if you actually don't want to", components: [] })
+                    .then(() => {
+                        return interaction.channel.awaitMessages({ filter: r => { return r.author.id === interaction.user.id && (r.content.toLowerCase().startsWith("nah") || r.attachments.size > 0 && r.attachments.size < 11) }, max: 1, time: 120000, errors: ["time"] })
+                            .then(collected => {
+                                if(collected.first().content.toLowerCase().startsWith("nah")) return [false];
+    
+                                collected.first().delete();
+    
+                                return collected.first().attachments;
+                            })
+                            .catch(collected => {
+                                return [false];
+                            })
+                    });
+            
+                const screenshots = await images.map(a => {
+                    if(isValidImage(a.url)) return a.url;
+                });
+
+                const ssChannel = require("../../main").client.channels.cache.find(channel => channel.id === "913061950248861696");
+
+                const msg = await ssChannel.send({ files: screenshots });
+
+                const ss = await msg.attachments.map(a => {
+                    return a.url;
+                });
+                
+                upload(ss);
+            }
+
+            if(i.customId === "cancel"){
+                upload([]);
+            }
         })
-        
-        const response = await profileModel.findOneAndUpdate({
-            userID: interaction.user.id
-        }, {
-            mainSkin: { name: skinName, link: skinLink, screenshots: screenshots }
-        });
 
-        interaction.editReply(`Successfully set your main skin${screenshots[0] ? ` with ${screenshots.length} screenshots` : ``}!`);
+        const upload = async (screenshots) => {
+            const response = await profileModel.findOneAndUpdate({
+                userID: interaction.user.id
+            }, {
+                mainSkin: { name: skinName, link: skinLink, screenshots: screenshots }
+            });
+    
+            interaction.editReply({ content: `Successfully set your main skin${screenshots[0] ? ` with ${screenshots.length} screenshots` : ``}!`, components: [] });
+        }
     }
 }
