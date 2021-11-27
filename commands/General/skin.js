@@ -30,7 +30,7 @@ module.exports = {
                     option
                         .setName("link")
                         .setDescription("The skin link")
-                        .setRequired(true))),
+                        .setRequired(false))),
     async execute(interaction){
         const { client } = require("../../main");
 
