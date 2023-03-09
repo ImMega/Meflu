@@ -30,10 +30,10 @@ module.exports = async () => {
         }
     ]
 
-    client.guilds.cache.get("864529121874018374").members.fetch().then((members) => {
-        members.forEach((member) => {
-            if(member.user.id === "888876737914601472") client.activities.find(m => m.type === "PLAYING").name.push("with " + member.user.username)
-        })
+    const skinAcademy = await client.guilds.fetch("864529121874018374");
+
+    skinAcademy.members.fetch("910129237581774879").then((member) => {
+        client.activities.find(m => m.type === "PLAYING").name.push("with " + member.user.username);
     })
 
     setInterval(() => {
