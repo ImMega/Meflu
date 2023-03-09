@@ -19,3 +19,5 @@ mongoose.connect(process.env.MONGO_SRV)
 .catch(err => console.log(err));
 
 client.login(process.env.TOKEN);
+
+require("./verifyCheck")(client);
